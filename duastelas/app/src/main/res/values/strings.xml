@@ -2,4 +2,5 @@
     <string name="app_name">DuasTelas</string>
     <string name="txtStrAlo">Hello World!</string>
     <string name="strBtnGoToTela1">Go to Tela1</string>
+    <string name="strBtnVoltar">Back</string>
 </resources>
