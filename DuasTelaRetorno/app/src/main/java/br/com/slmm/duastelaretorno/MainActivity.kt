@@ -16,19 +16,27 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val launcher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()) { result ->
-            Log.d("Teste","Retorno")
-            Log.d("Teste", result.resultCode.toString())
-            if (result.resultCode == Activity.RESULT_OK){
-                val data: Intent? = result.data
-                var txt = findViewById(R.id.textView) as TextView
-                var msg = data?.getData().toString()
+            ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+               Log.d("Teste","Retorno")
+               Log.d("Teste", result.resultCode.toString())
+               var msg: String = ""
 
-                //getStringExtra("ActivityResult")
-                txt.setText(msg)
+                if (result.resultCode == Activity.RESULT_OK){
+                    result.data?.let{
+                        if (it.hasExtra("param1")){
+                            msg = msg +  it.getIntExtra("param1",0).toString()
+                        }
+                        if (it.hasExtra("param2")){
+                            msg = msg + it.getStringExtra("param2").toString()
+                        }
+                    }
+
+                    //val bundle: Bundle? = result.data?.extras
+                    //msg = bundle?.get("ActivityResult").toString()
+                    var txt = findViewById(R.id.textView) as TextView
+                    txt.setText(msg)
+                }
             }
-
-        }
 
         val btnNext = findViewById(R.id.btnGetValor) as Button
         btnNext.setOnClickListener{
