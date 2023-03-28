@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         android.R.layout.simple_list_item_1, usuarios)
         mListView.adapter = arrayAdapter
 
+        var lista = mutableListOf<Cores>()
         var text: String = ""
         var valor: String = ""
         val context = this.applicationContext
@@ -32,14 +33,17 @@ class MainActivity : AppCompatActivity() {
             val tagname = xmlStr.name
             when (eventType){
                 XmlPullParser.START_TAG -> if (tagname.equals("cor", ignoreCase = true)){
+
                     val attr = xmlStr.getAttributeName(0)
                     valor = xmlStr.getAttributeValue(0).toString()
 
                 }
 
-                XmlPullParser.TEXT ->  text = xmlStr.text
-
-
+                XmlPullParser.TEXT ->  {
+                    text = xmlStr.text
+                    var cor = Cores(valor, text)
+                    lista.add(cor)
+                }
                 XmlPullParser.END_TAG ->if (tagname.equals("cor", ignoreCase = true)) {
 
                 }
@@ -52,6 +56,9 @@ class MainActivity : AppCompatActivity() {
 
 
         Log.d("Teste",text + valor)
+        lista.forEach{
+            Log.d("TESTE", it.nome)
+        }
 
     }
 }
