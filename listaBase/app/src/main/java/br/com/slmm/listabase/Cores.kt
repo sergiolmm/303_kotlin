@@ -7,13 +7,17 @@ class Cores (nome: String, valor: String){
         private set
 
     init {
-        require(nome.trim().length > 0){
-            "Informe um nome"
+        require(nome.trim().length > 2){
+            println("Informe um nome")
         }
-        require( valor.trim().length > 0){
-            "informe um valor"
+        require( valor.trim().length > 2){
+            println("informe um valor")
         }
         this.nome = nome
         this.valor = valor
     }
+    fun teste(): Int {
+        return 10
+    }
+
 }
