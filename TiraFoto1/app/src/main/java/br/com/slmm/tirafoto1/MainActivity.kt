@@ -6,14 +6,19 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Base64
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
+import java.io.ByteArrayOutputStream
 
 class MainActivity : AppCompatActivity() {
 
@@ -102,6 +107,20 @@ class MainActivity : AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode === CAMERA_CAPTURE_CODE) {
                 imagem?.setImageURI(imageUri)
+
+                val bitmap = (imagem?.getDrawable() as BitmapDrawable).getBitmap()
+                val stream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream)
+                val image2 = stream.toByteArray()
+                var str: String = Base64.encodeToString(image2,Base64.DEFAULT)
+                str = "data:image/jpeg;base64,"+ str
+                Log.d("DataUrl to site", str)
+
+                //console.log(dataURL);
+                // "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNby
+                // blAAAADElEQVQImWNgoBMAAABpAAFEI8ARAAAAAElFTkSuQmCC"
+
+                // data:image/jpeg;base64,/9j/4AAQSkZJRgABAQ...9oADAMBAAIRAxEAPwD/AD/6AP/Z"
             }
 
         }else{
