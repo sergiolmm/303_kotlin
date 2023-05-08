@@ -20,6 +20,8 @@ class MainActivity : AppCompatActivity() {
 
     private var mApiService: APIService? = null
 
+    private var mApiService2: APIService2? = null
+    lateinit var EstruturaList: ArrayList<EstruturaApi>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +30,23 @@ class MainActivity : AppCompatActivity() {
 
         binding.btn.setOnClickListener {
 
+
+            mApiService2 = ApiClient.client.create(APIService2::class.java)
+
+            val call = mApiService2!!.fetchDados("1234")
+            call!!.enqueue(object : Callback<ArrayList<EstruturaApi>?> {
+
+                override fun onResponse(call: Call<ArrayList<EstruturaApi>?>, response: Response<ArrayList<EstruturaApi>?>){
+                    Log.d("RETTO", "TOTAL " + response.body()!!)
+                    EstruturaList = response.body()!!
+                }
+                override fun onFailure(call: Call<ArrayList<EstruturaApi>?>, t: Throwable) {
+                    Log.e("TAG", "Got error : " + t.localizedMessage)
+                }
+
+
+            })
+        /*
             mApiService = RestClient.client.create(APIService::class.java)
 
             val call = mApiService!!.fetchQuestions("android")
@@ -44,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
             })
 
-
+*/
         }
     }
 }
@@ -84,3 +103,34 @@ interface APIService {
 }
 
 
+object ApiClient {
+
+    private val BASE_URL = "https://www.slmm.com.br"
+    private var mRetrofit: Retrofit? = null
+
+    val client: Retrofit
+        get() {
+            if (mRetrofit == null){
+                mRetrofit = Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+            }
+            return this.mRetrofit!!
+        }
+}
+//mapes os objetos json (chaves) para um objeto
+class EstruturaApi{
+    val id: Int? = null
+    val ra:  String? = null
+    val data:  String? = null
+    val lat:  String? = null
+    val log:  String? = null
+    val img:  String? = null
+}
+
+// interface para acessar end point (retrofit)
+interface APIService2 {
+    @GET("/DS/getDados.php?")
+    fun fetchDados(@Query("ra") tags: String): Call<ArrayList<EstruturaApi>>
+}
